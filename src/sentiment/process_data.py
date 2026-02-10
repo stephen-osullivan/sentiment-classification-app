@@ -13,6 +13,8 @@ from sentiment.logging_config import setup_logging
 
 def clean_text(text: str) -> str:
     HTML_TAG_RE = re.compile(r"<.*?>")
+    # Convert to lowercase
+    text = text.lower()
     # Decode HTML entities (e.g. &quot;)
     text = unescape(text)
     # Remove HTML tags
