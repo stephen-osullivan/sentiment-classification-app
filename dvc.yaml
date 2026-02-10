@@ -1,6 +1,32 @@
 stages:
   download:
     cmd: uv run python src/sentiment/download_data.py
+    deps:
+      - src/sentiment/download_data.py
     outs:
       - data/raw/imdb_train.csv
       - data/raw/imdb_test.csv
+  process:
+    cmd: uv run python src/sentiment/process_data.py
+    deps:
+      - src/sentiment/process_data.py 
+      - data/raw/imdb_train.csv
+      - data/raw/imdb_test.csv
+    outs:
+      - data/processed/imdb_train.csv
+      - data/processed/imdb_test.csv
+  train:
+    cmd: uv run python src/sentiment/train_model.py
+    deps:
+      - src/sentiment/train_model.py
+      - data/processed/imdb_train.csv
+    outs:
+      - artifacts/sentiment_model.joblib
+  evaluate:
+    cmd: uv run python src/sentiment/evaluate_model.py
+    deps:
+      - src/sentiment/evaluate_model.py
+      - data/processed/imdb_test.csv
+      - artifacts/sentiment_model.joblib
+    outs:
+      - artifacts/evaluation_metrics.json

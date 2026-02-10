@@ -2,6 +2,11 @@ schema: '2.0'
 stages:
   download:
     cmd: uv run python src/sentiment/download_data.py
+    deps:
+    - path: src/sentiment/download_data.py
+      hash: md5
+      md5: d14a9c4b334a43b208b6aae5cffaf676
+      size: 1062
     outs:
     - path: data/raw/imdb_test.csv
       hash: md5
@@ -11,3 +16,63 @@ stages:
       hash: md5
       md5: dc4c040dd7f3bfb42a279cb1f73725d5
       size: 33322167
+  process:
+    cmd: uv run python src/sentiment/process_data.py
+    deps:
+    - path: data/raw/imdb_test.csv
+      hash: md5
+      md5: 0b6a6e22790570c21fc32211b41578c3
+      size: 32540147
+    - path: data/raw/imdb_train.csv
+      hash: md5
+      md5: dc4c040dd7f3bfb42a279cb1f73725d5
+      size: 33322167
+    - path: src/sentiment/process_data.py
+      hash: md5
+      md5: 4f314ffe4ed74661b526ff534cc61d94
+      size: 1628
+    outs:
+    - path: data/processed/imdb_test.csv
+      hash: md5
+      md5: 9f0bf259d1c625d12f4cbd5e12820dff
+      size: 31981115
+    - path: data/processed/imdb_train.csv
+      hash: md5
+      md5: f6e8688db992b21b8003da572aceea90
+      size: 32753236
+  train:
+    cmd: uv run python src/sentiment/train_model.py
+    deps:
+    - path: data/processed/imdb_train.csv
+      hash: md5
+      md5: f6e8688db992b21b8003da572aceea90
+      size: 32753236
+    - path: src/sentiment/train_model.py
+      hash: md5
+      md5: 4d96d36bd803ebb3f523f7692fbfa1c8
+      size: 1599
+    outs:
+    - path: artifacts/sentiment_model.joblib
+      hash: md5
+      md5: ab3b1f079e6e3580e91d05915a78ad6a
+      size: 2384452
+  evaluate:
+    cmd: uv run python src/sentiment/evaluate_model.py
+    deps:
+    - path: artifacts/sentiment_model.joblib
+      hash: md5
+      md5: ab3b1f079e6e3580e91d05915a78ad6a
+      size: 2384452
+    - path: data/processed/imdb_test.csv
+      hash: md5
+      md5: 9f0bf259d1c625d12f4cbd5e12820dff
+      size: 31981115
+    - path: src/sentiment/evaluate_model.py
+      hash: md5
+      md5: 583f10338f38a414d7dad756fc9e0fe1
+      size: 1516
+    outs:
+    - path: artifacts/evaluation_metrics.json
+      hash: md5
+      md5: c47ac13dd2b8843c5dfdd829f8e4f9f0
+      size: 681
