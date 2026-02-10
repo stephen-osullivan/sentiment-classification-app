@@ -1,0 +1,6 @@
+stages:
+  download:
+    cmd: uv run python src/sentiment/download_data.py
+    outs:
+      - data/raw/imdb_train.csv
+      - data/raw/imdb_test.csv
