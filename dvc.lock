@@ -29,23 +29,23 @@ stages:
       size: 33322167
     - path: src/sentiment/process_data.py
       hash: md5
-      md5: 4f314ffe4ed74661b526ff534cc61d94
-      size: 1628
+      md5: 8c827a4aff210d650cf3d35ab940301c
+      size: 1679
     outs:
     - path: data/processed/imdb_test.csv
       hash: md5
-      md5: 9f0bf259d1c625d12f4cbd5e12820dff
+      md5: 76571ff781f18f9724dac46abb7dd865
       size: 31981115
     - path: data/processed/imdb_train.csv
       hash: md5
-      md5: f6e8688db992b21b8003da572aceea90
+      md5: f737a14968c816e12ddd097a5f2f532e
       size: 32753236
   train:
     cmd: uv run python src/sentiment/train_model.py
     deps:
     - path: data/processed/imdb_train.csv
       hash: md5
-      md5: f6e8688db992b21b8003da572aceea90
+      md5: f737a14968c816e12ddd097a5f2f532e
       size: 32753236
     - path: src/sentiment/train_model.py
       hash: md5
@@ -54,18 +54,18 @@ stages:
     outs:
     - path: artifacts/sentiment_model.joblib
       hash: md5
-      md5: ab3b1f079e6e3580e91d05915a78ad6a
+      md5: f2063a6bcbcda65e8e4140584899743d
       size: 2384452
   evaluate:
     cmd: uv run python src/sentiment/evaluate_model.py
     deps:
     - path: artifacts/sentiment_model.joblib
       hash: md5
-      md5: ab3b1f079e6e3580e91d05915a78ad6a
+      md5: f2063a6bcbcda65e8e4140584899743d
       size: 2384452
     - path: data/processed/imdb_test.csv
       hash: md5
-      md5: 9f0bf259d1c625d12f4cbd5e12820dff
+      md5: 76571ff781f18f9724dac46abb7dd865
       size: 31981115
     - path: src/sentiment/evaluate_model.py
       hash: md5

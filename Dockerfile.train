@@ -1,0 +1,32 @@
+# Dockerfile for training the sentiment classification model using DVC pipeline
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install uv
+RUN pip install --no-cache-dir uv
+
+# Copy uv.lock, pyproject.toml, and README.md
+COPY uv.lock pyproject.toml README.md ./
+
+# Install dependencies from lock file (without installing the project itself yet)
+RUN uv sync --frozen --no-install-project
+
+# Copy source code
+COPY . .
+
+# Complete project installation
+RUN uv sync --frozen
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+ENV PATH="/app/.venv/bin:$PATH"
+
+# Run the DVC pipeline to train the model
+CMD ["uv", "run", "dvc", "repro"]

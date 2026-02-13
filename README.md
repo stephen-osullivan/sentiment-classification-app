@@ -1,6 +1,8 @@
 # sentiment-classification-app
 System for classifying sentiment based on the imdb dataset
 
+**The below explains how to run the app with uv. To use docker see the DOCKER_DEPLOYENT.md**
+
 ## uv
 1) Install: curl -LsSf https://astral.sh/uv/install.sh | sh
 2) sync env: $ uv sync
@@ -21,6 +23,11 @@ $ curl -X POST "http://127.0.0.1:8000/predict" \
 
 ## Example app response:
 {"label":"positive","confidence":0.729637729436262}
+
+## Launch Streamlit Client
+This allows you to send text to the fastapi api for realtime classification.
+
+uv run streamlit run apps/client/app.py
 
 ## Tests
 * Unit tests: $ uv run pytest tests/unit

@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  # Service for training the model
+  train:
+    build:
+      context: .
+      dockerfile: Dockerfile.train
+    container_name: sentiment-train
+    volumes:
+      - ./data:/app/data
+      - ./artifacts:/app/artifacts
+      - ./src:/app/src
+      - ./dvc.lock:/app/dvc.lock
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  # Service for running the FastAPI app
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: sentiment-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./artifacts:/app/artifacts
+      - ./src:/app/src
+      - ./apps:/app/apps
+    environment:
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - train
+    restart: unless-stopped
